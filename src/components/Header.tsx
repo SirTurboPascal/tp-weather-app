@@ -6,8 +6,6 @@ export default function () {
 			<div className='flex items-center'>
 				<Logo />
 			</div>
-
-			<h1 className='text-neutral-0 font-bricolage-grotesque text-center text-[52px]/[120%] font-bold antialiased'>How's the sky looking today?</h1>
 		</header>
 	);
 }

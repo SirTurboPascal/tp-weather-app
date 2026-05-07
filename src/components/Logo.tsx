@@ -5,7 +5,7 @@ import logoImage from '@/assets/images/logo.svg';
 
 export default function () {
 	return (
-		<Link className='flex shrink-0 items-center gap-125' href='/'>
+		<Link className='flex shrink-0 items-center gap-125 select-none' href='/'>
 			<div className='relative size-[28px] md:size-500'>
 				<Image alt='' src={logoImage} fill unoptimized />
 			</div>
