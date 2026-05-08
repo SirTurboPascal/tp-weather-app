@@ -1,32 +1,32 @@
 'use client';
 
-import { ChangeEvent, SubmitEvent, useId, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { useRouter } from 'next/navigation';
+import { SubmitEvent, useId } from 'react';
 
 import Icon from '@/components/Icon';
 
-import { SearchFormValues } from '@/model/types/search-form-values.type';
-
-const initialState: SearchFormValues = {
-	searchTerm: '',
-};
+import { useSearchForm } from '@/hooks/use-search-form.hook';
 
 export default function () {
 	const id = useId();
+	const router = useRouter();
+	const { values, reset, setValue } = useSearchForm();
 
-	const [searchFormValues, setSearchFormValues] = useState<SearchFormValues>(initialState);
-
-	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = event.target;
-
-		setSearchFormValues({
-			...searchFormValues,
-
-			[name]: value,
-		});
-	};
-
-	const handleSubmit = (event: SubmitEvent) => {
+	const handleSubmit = async (event: SubmitEvent) => {
 		event.preventDefault();
+
+		const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${values.searchTerm}&count=1`);
+		if (response.ok) {
+			const { results } = await response.json();
+
+			if (!isEmpty(results)) {
+				const { latitude, longitude } = results[0];
+				router.push(`?lat=${latitude}&lon=${longitude}`);
+
+				reset();
+			}
+		}
 	};
 
 	return (
@@ -37,11 +37,11 @@ export default function () {
 				<input
 					id={id}
 					className='peer font-dm-sans grow text-[20px]/[120%] font-medium text-neutral-200 antialiased outline-none'
-					onChange={handleChange}
+					onChange={({ target }) => setValue(target.name, target.value)}
 					name='searchTerm'
 					placeholder='Search for a place...'
 					type='text'
-					value={searchFormValues.searchTerm}
+					value={values.searchTerm}
 				/>
 
 				<div className='rounded-16 border-neutral-0 pointer-events-none absolute -inset-50 hidden border-2 peer-focus:block' />
