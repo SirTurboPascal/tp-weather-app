@@ -1,0 +1,25 @@
+import { IconName } from '@/model/types/icon-name.type';
+
+export const WEATHER_ICON_RECORD: Record<number, IconName> = {
+	0: 'sunny',
+	1: 'sunny',
+	2: 'partlyCloudy',
+	3: 'overcast',
+	45: 'fog',
+	48: 'fog',
+	51: 'drizzle',
+	53: 'drizzle',
+	58: 'drizzle',
+	61: 'rain',
+	63: 'rain',
+	65: 'rain',
+	71: 'snow',
+	73: 'snow',
+	75: 'snow',
+	80: 'rain',
+	81: 'rain',
+	82: 'rain',
+	95: 'storm',
+	96: 'storm',
+	99: 'storm',
+};

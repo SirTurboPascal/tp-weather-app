@@ -1,36 +1,42 @@
 'use client';
 
 import { isEmpty } from 'lodash';
-import { useRouter } from 'next/navigation';
 import { SubmitEvent, useId } from 'react';
 
 import Icon from '@/components/Icon';
 
+import { useGeolocation } from '@/hooks/use-geolocation.hook';
 import { useSearchForm } from '@/hooks/use-search-form.hook';
 
 export default function () {
 	const id = useId();
-	const router = useRouter();
+	const { setGeolocation } = useGeolocation();
 	const { values, reset, setValue } = useSearchForm();
 
 	const handleSubmit = async (event: SubmitEvent) => {
 		event.preventDefault();
 
-		const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${values.searchTerm}&count=1`);
+		const { searchTerm } = values;
+		const url = `${process.env.NEXT_PUBLIC_GEOCODING_API}?name=${searchTerm}&count=1`;
+		const response = await fetch(url);
+
 		if (response.ok) {
 			const { results } = await response.json();
 
-			if (!isEmpty(results)) {
-				const { latitude, longitude } = results[0];
-				router.push(`?lat=${latitude}&lon=${longitude}`);
+			if (isEmpty(results)) {
+				window.alert(`No results were found for the search term "${searchTerm}"!`);
 
-				reset();
+				return;
 			}
+
+			const { country, name, latitude, longitude } = results[0];
+			setGeolocation({ country, name, latitude, longitude });
+			reset();
 		}
 	};
 
 	return (
-		<form className='flex shrink-0 flex-col gap-200 md:flex-row' onSubmit={handleSubmit}>
+		<form className='flex shrink-0 flex-col gap-200 md:flex-row lg:mx-auto lg:w-[656px]' onSubmit={handleSubmit}>
 			<label className='rounded-12 relative flex h-[51px] grow cursor-text items-center gap-200 bg-neutral-800 px-300 hover:bg-neutral-700' htmlFor={id}>
 				<Icon name='search' size={20} />
 

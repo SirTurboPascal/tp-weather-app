@@ -62,3 +62,16 @@
 	--radius-4: 4px;
 	--radius-0: 0;
 }
+
+@layer utilities {
+	.bg-image {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+
+		background: center no-repeat;
+		background-size: cover;
+	}
+}
