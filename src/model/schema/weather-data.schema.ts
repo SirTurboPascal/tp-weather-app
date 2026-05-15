@@ -2,4 +2,6 @@ import { z } from 'zod';
 
 import { CurrentWeatherDataSchema } from '@/model/schema/current-weather-data.schema';
 
-export type CurrentWeatherData = z.infer<typeof CurrentWeatherDataSchema>;
+export const WeatherData = z.object({
+	current: CurrentWeatherDataSchema,
+});

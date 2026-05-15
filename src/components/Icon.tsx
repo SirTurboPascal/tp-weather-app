@@ -10,5 +10,5 @@ type IconProps = {
 };
 
 export default function ({ name, size }: IconProps) {
-	return <Image className='select-none' alt='' height={size} src={ICON_POOL[name]} unoptimized width={size} />;
+	return <Image className='shrink-0 select-none' alt='' height={size} src={ICON_POOL[name]} width={size} unoptimized />;
 }

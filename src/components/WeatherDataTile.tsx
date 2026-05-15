@@ -1,14 +1,20 @@
+import Typography from './Typography';
+
 type WeatherDataTileProps = {
-	data: string;
 	label: string;
+	data: string;
 };
 
-export default function ({ data, label }: WeatherDataTileProps) {
+export default function ({ label, data }: WeatherDataTileProps) {
 	return (
-		<div className='rounded-12 flex h-[118px] cursor-default flex-col justify-between overflow-hidden border border-neutral-600 bg-neutral-800 p-250 antialiased select-none'>
-			<span className='font-dm-sans text-[18px]/[120%] font-medium text-neutral-200'>{label}</span>
+		<div className='rounded-12 flex flex-col gap-300 border border-neutral-600 bg-neutral-800 p-250'>
+			<Typography className='text-neutral-200' variant='preset-6'>
+				<>{label}</>
+			</Typography>
 
-			<p className='font-dm-sans text-neutral-0 text-[32px]/[100%] font-light'>{data}</p>
+			<Typography className='text-neutral-0' variant='preset-3'>
+				<>{data}</>
+			</Typography>
 		</div>
 	);
 }

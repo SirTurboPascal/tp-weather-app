@@ -1,5 +1,5 @@
-import { CurrentWeatherData } from '@/model/types/current-weather-data.type';
+import { z } from 'zod';
 
-export type WeatherData = {
-	current: CurrentWeatherData;
-};
+import { WeatherData } from '@/model/schema/weather-data.schema';
+
+export type WeatherData = z.infer<typeof WeatherData>;

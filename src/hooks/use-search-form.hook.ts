@@ -7,20 +7,13 @@ type State = {
 };
 
 type Action = {
-	reset: () => void;
 	setValue: (name: string, value: string) => void;
-};
-
-const initialState: SearchFormValues = {
-	searchTerm: '',
 };
 
 export const useSearchForm = create<State & Action>((set, get) => {
 	return {
-		values: initialState,
-
-		reset: () => {
-			set({ values: initialState });
+		values: {
+			searchTerm: '',
 		},
 
 		setValue: (name, value) => {
