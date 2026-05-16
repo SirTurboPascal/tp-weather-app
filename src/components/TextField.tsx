@@ -18,6 +18,7 @@ export default function ({ name, onChange, placeholder, value }: Pick<ComponentP
 			<input
 				id={id}
 				className={`${TYPOGRAPHY_CONFIGS['preset-5'].styles} peer grow font-medium text-neutral-200 outline-none`}
+				autoCapitalize='words'
 				name={name}
 				onChange={onChange}
 				onFocus={handleFocus}
