@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 
 import { useSelectedGeocoding } from '@/hooks/use-selected-geocoding.hook';
 import { CurrentWeatherDataSchema } from '@/model/schema/current-weather-data.schema';
-import { CurrentWeatherData } from '@/model/types/current-weather-data.type';
+import { DailyWeatherDataSchema } from '@/model/schema/daily-weather-data.schema';
 import { WeatherData } from '@/model/types/weather-data.type';
 
 type WeatherForecastApiContext = {
@@ -31,40 +31,23 @@ export default function ({ children }: WeatherForecastApiContextProviderProps) {
 			let weatherData: WeatherData | null = null;
 
 			if (!isNil(selectedGeocoding)) {
-				const { coords } = selectedGeocoding;
-				const { latitude, longitude } = coords;
+				const { latitude, longitude } = selectedGeocoding.coords;
 
 				const rootUrl = `${process.env.NEXT_PUBLIC_OPEN_METEO_API}?latitude=${latitude}&longitude=${longitude}`;
+				const filteredCurrentParam = Object.keys(CurrentWeatherDataSchema.shape).filter((it) => !eq(it, 'time'));
+				const currentParam = `&current=${join(filteredCurrentParam, ',')}`;
+				const filteredDailyParams = Object.keys(DailyWeatherDataSchema.shape).filter((it) => !eq(it, 'time'));
+				const dailyParams = `&daily=${join(filteredDailyParams, ',')}`;
 
-				const currentParam = `&current=${join(
-					Object.keys(CurrentWeatherDataSchema.shape).filter((it) => {
-						return !eq('time', it);
-					}),
-
-					',',
-				)}`;
-
-				const url = rootUrl + currentParam;
+				const url = rootUrl + currentParam + dailyParams;
 				const response = await fetch(url);
 
 				if (response.ok) {
-					const { current } = await response.json();
-					const { apparent_temperature, precipitation, relative_humidity_2m, temperature_2m, time, weather_code, wind_speed_10m } = current;
-
-					const currentWeatherData: CurrentWeatherData = {
-						apparent_temperature,
-						precipitation,
-						relative_humidity_2m,
-						temperature_2m,
-						time,
-						weather_code,
-						wind_speed_10m,
-					};
-
-					weatherData = { current: currentWeatherData };
+					weatherData = await response.json();
 				}
 			}
 
+			console.log(weatherData);
 			setWeatherData(weatherData);
 		};
 
