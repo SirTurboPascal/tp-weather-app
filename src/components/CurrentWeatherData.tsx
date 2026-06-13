@@ -1,4 +1,4 @@
-import { round } from 'lodash';
+import { find, round } from 'lodash';
 
 import bgTodayLargeImage from '@/assets/images/bg-today-large.svg';
 import bgTodaySmallImage from '@/assets/images/bg-today-small.svg';
@@ -6,6 +6,8 @@ import Typography from '@/components/Typography';
 import WeatherDataTile from '@/components/WeatherDataTile';
 import WeatherIcon from '@/components/WeatherIcon';
 
+import { UNITS } from '@/constants/units.constant';
+import { useUnits } from '@/hooks/use-units.hook';
 import { CurrentWeatherData } from '@/model/types/current-weather-data.type';
 import { Geocoding } from '@/model/types/geocoding.type';
 import { formatDate } from '@/util/format-date.util';
@@ -16,8 +18,12 @@ type CurrentWeatherDataProps = {
 };
 
 export default function ({ currentWeatherData, geocoding }: CurrentWeatherDataProps) {
+	const { units } = useUnits();
+
 	const { apparent_temperature, precipitation, relative_humidity_2m, temperature_2m, time, weather_code, wind_speed_10m } = currentWeatherData;
 	const { country, name } = geocoding;
+
+	const unit = find(UNITS.temperature, { id: units.temperature });
 
 	return (
 		<div className='flex flex-col gap-250'>
@@ -38,17 +44,17 @@ export default function ({ currentWeatherData, geocoding }: CurrentWeatherDataPr
 						<WeatherIcon size={120} weatherCode={weather_code} />
 
 						<Typography className='text-neutral-0' variant='preset-1'>
-							<>{round(temperature_2m)}°</>
+							<>{`${round(temperature_2m)} ${unit?.symbol}`}</>
 						</Typography>
 					</div>
 				</div>
 			</div>
 
 			<div className='grid grid-cols-2 gap-200 md:grid-cols-4'>
-				<WeatherDataTile data={`${round(apparent_temperature)}°`} label='Feels Like' />
+				<WeatherDataTile data={`${round(apparent_temperature)} ${unit?.symbol}`} label='Feels Like' />
 				<WeatherDataTile data={`${relative_humidity_2m} %`} label='Humidity' />
-				<WeatherDataTile data={`${round(wind_speed_10m)} km/h`} label='Wind' />
-				<WeatherDataTile data={`${precipitation} mm`} label='Precipitation' />
+				<WeatherDataTile data={`${round(wind_speed_10m)} ${units.wind_speed}`} label='Wind' />
+				<WeatherDataTile data={`${precipitation} ${units.precipitation}`} label='Precipitation' />
 			</div>
 		</div>
 	);

@@ -2,6 +2,7 @@ import { eq, isNil, join } from 'lodash';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { useSelectedGeocoding } from '@/hooks/use-selected-geocoding.hook';
+import { useUnits } from '@/hooks/use-units.hook';
 import { CurrentWeatherDataSchema } from '@/model/schema/current-weather-data.schema';
 import { DailyWeatherDataSchema } from '@/model/schema/daily-weather-data.schema';
 import { WeatherData } from '@/model/types/weather-data.type';
@@ -25,6 +26,7 @@ export default function ({ children }: WeatherForecastApiContextProviderProps) {
 	const [weatherDataVisible, setWeatherDataVisible] = useState<boolean>(false);
 
 	const { selectedGeocoding } = useSelectedGeocoding();
+	const { units } = useUnits();
 
 	useEffect(() => {
 		const fetchWeatherForecastData = async () => {
@@ -38,8 +40,9 @@ export default function ({ children }: WeatherForecastApiContextProviderProps) {
 				const currentParam = `&current=${join(filteredCurrentParam, ',')}`;
 				const filteredDailyParams = Object.keys(DailyWeatherDataSchema.shape).filter((it) => !eq(it, 'time'));
 				const dailyParams = `&daily=${join(filteredDailyParams, ',')}`;
+				const unitParams = `&precipitation_unit=${units.precipitation}&temperature_unit=${units.temperature}&wind_speed_unit=${units.wind_speed}`;
 
-				const url = rootUrl + currentParam + dailyParams;
+				const url = rootUrl + currentParam + dailyParams + unitParams;
 				const response = await fetch(url);
 
 				if (response.ok) {
@@ -47,12 +50,11 @@ export default function ({ children }: WeatherForecastApiContextProviderProps) {
 				}
 			}
 
-			console.log(weatherData);
 			setWeatherData(weatherData);
 		};
 
 		fetchWeatherForecastData();
-	}, [selectedGeocoding]);
+	}, [selectedGeocoding, units]);
 
 	return <WeatherForecastApiContext.Provider value={{ setWeatherDataVisible, weatherData, weatherDataVisible }}>{children}</WeatherForecastApiContext.Provider>;
 }

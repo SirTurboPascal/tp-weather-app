@@ -17,7 +17,7 @@ export default function ({ size, weatherCode }: WeatherIconProps) {
 			break;
 
 		case 2:
-			iconName = 'partyCloudy';
+			iconName = 'partlyCloudy';
 			break;
 
 		case 3:

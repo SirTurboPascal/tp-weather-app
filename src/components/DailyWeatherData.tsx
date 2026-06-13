@@ -1,8 +1,10 @@
-import { map, round } from 'lodash';
+import { find, map, round } from 'lodash';
 
 import Typography from '@/components/Typography';
 import WeatherIcon from '@/components/WeatherIcon';
 
+import { UNITS } from '@/constants/units.constant';
+import { useUnits } from '@/hooks/use-units.hook';
 import { DailyWeatherData } from '@/model/types/daily-weather-data.type';
 import { getWeekday } from '@/util/get-weekday.util';
 
@@ -11,6 +13,10 @@ type DailyWeatherDataProps = {
 };
 
 export default function ({ dailyWeatherData }: DailyWeatherDataProps) {
+	const { units } = useUnits();
+
+	const unit = find(UNITS.temperature, { id: units.temperature });
+
 	return (
 		<div className='flex flex-col gap-250'>
 			<Typography className='text-neutral-0 gap-250 self-start' variant='preset-5'>
@@ -33,11 +39,11 @@ export default function ({ dailyWeatherData }: DailyWeatherDataProps) {
 
 							<div className='flex items-center justify-between self-stretch'>
 								<Typography className='text-neutral-0' variant='preset-7'>
-									<>{round(temperature_2m_max)}°</>
+									<>{`${round(temperature_2m_max)} ${unit?.symbol}`}</>
 								</Typography>
 
 								<Typography className='text-neutral-200' variant='preset-7'>
-									<>{round(temperature_2m_min)}°</>
+									<>{`${round(temperature_2m_min)} ${unit?.symbol}`}</>
 								</Typography>
 							</div>
 						</div>
