@@ -8,8 +8,8 @@ export const UNITS: Record<Quantity, Unit[]> = {
 	],
 
 	temperature: [
-		{ id: 'celsius', label: 'Celsius', symbol: '°C' },
-		{ id: 'fahrenheit', label: 'Fahrenheit', symbol: '°F' },
+		{ id: 'celsius', label: 'Celsius', symbol: '°' },
+		{ id: 'fahrenheit', label: 'Fahrenheit', symbol: '°' },
 	],
 
 	wind_speed: [
